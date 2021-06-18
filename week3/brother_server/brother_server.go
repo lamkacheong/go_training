@@ -35,31 +35,41 @@ func (b BrotherServers) Run() error {
 		server := value   //avoid data race
 		b.errorGroup.Go(
 			func() error {
-				go func() {
-					select {
-					case <-b.context.Done():
-						fmt.Printf("gracefully stop server: %v\n", serverName)
-						server.Shutdown(b.context)
-					}
-				}()
+				fmt.Printf("start server: %v\n", serverName)
 				err := server.ListenAndServe()
 				b.cancel()
 				return err
+			})
+		b.errorGroup.Go(
+			func() error {
+				select {
+				case <-b.context.Done():
+					fmt.Printf("gracefully stop server: %v\n", serverName)
+					server.Shutdown(b.context)
+				}
+				return nil
 			})
 	}
 
 	c := make(chan os.Signal)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM,
 		syscall.SIGQUIT)
-	go func() {
-		for s := range c {
-			switch s {
-			case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
-				fmt.Printf("Capture system signal %v\n", s)
-				b.cancel()
+	b.errorGroup.Go(
+		func() error {
+			select {
+				case s := <- c:
+					switch s {
+					case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
+						fmt.Printf("Capture system signal %v\n", s)
+						b.cancel()
+						return nil
+					}
+				case <-b.context.Done():
+					fmt.Printf("stop signal capture\n")
+					return nil
 			}
-		}
-	}()
+			return nil
+		})
 
 	return b.errorGroup.Wait()
 }
