@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package api.drama.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "week4/api/drama/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.drama.v1";
+
+service Drama {
+    rpc CreateDrama (CreateDramaRequest) returns (CreateDramaReply){
+        option (google.api.http) = {
+            post: "/drama/{name}"
+        };
+    };
+    rpc UpdateDrama (UpdateDramaRequest) returns (UpdateDramaReply){
+        option (google.api.http) = {
+            put: "/drama/{name}"
+        };
+    };
+    rpc DeleteDrama (DeleteDramaRequest) returns (DeleteDramaReply){
+        option (google.api.http) = {
+            delete: "/drama/{name}"
+        };
+    };
+    rpc GetDrama (GetDramaRequest) returns (GetDramaReply){
+        option (google.api.http) = {
+            get: "/drama/{name}"
+        };
+    };
+    rpc ListDrama (ListDramaRequest) returns (ListDramaReply){
+        option (google.api.http) = {
+            get: "/drama"
+        };
+    };
+}
+
+message DramaMessage {
+    int64 id = 1;
+    string title = 2;
+    string author = 3;
+    string category = 4;
+}
+
+message CreateDramaRequest {
+    string title = 1;
+    string author = 2;
+    string category = 3;
+}
+message CreateDramaReply {
+    DramaMessage drama = 1;
+}
+
+message UpdateDramaRequest {}
+message UpdateDramaReply {}
+
+message DeleteDramaRequest {}
+message DeleteDramaReply {}
+
+message GetDramaRequest {}
+message GetDramaReply {}
+
+message ListDramaRequest {}
+message ListDramaReply {
+    repeated DramaMessage results = 1;
+}
