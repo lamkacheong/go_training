@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
+	"time"
 )
 type Drama struct {
 	gorm.Model
@@ -37,5 +38,6 @@ func (uc *DramaUserCase) Update(ctx context.Context, g *Drama) error {
 }
 
 func (uc *DramaUserCase) List(ctx context.Context) (*[]Drama,error) {
+	time.Sleep(1 * time.Second)
 	return uc.repo.ListDrama(ctx)
 }

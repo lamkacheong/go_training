@@ -241,5 +241,5 @@ var Drama_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "drama.proto",
+	Metadata: "api/drama/v1/drama.proto",
 }

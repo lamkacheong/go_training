@@ -48,7 +48,7 @@ func (s *DramaService) GetDrama(ctx context.Context, req *pb.GetDramaRequest) (*
 func (s *DramaService) ListDrama(ctx context.Context, req *pb.ListDramaRequest) (*pb.ListDramaReply, error) {
 	dramas, err := s.uc.List(ctx)
 	replay := &pb.ListDramaReply{}
-	if err != nil {
+	if err == nil {
 		for _, drama := range *dramas{
 			replay.Results = append(replay.Results, &pb.DramaMessage{
 				Id: int64(drama.Id),

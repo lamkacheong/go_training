@@ -27,10 +27,10 @@ type DramaHTTPServer interface {
 
 func RegisterDramaHTTPServer(s *http.Server, srv DramaHTTPServer) {
 	r := s.Route("/")
-	r.POST("/drama/{name}", _Drama_CreateDrama0_HTTP_Handler(srv))
-	r.PUT("/drama/{name}", _Drama_UpdateDrama0_HTTP_Handler(srv))
-	r.DELETE("/drama/{name}", _Drama_DeleteDrama0_HTTP_Handler(srv))
-	r.GET("/drama/{name}", _Drama_GetDrama0_HTTP_Handler(srv))
+	r.POST("/drama", _Drama_CreateDrama0_HTTP_Handler(srv))
+	r.PUT("/drama/{id}", _Drama_UpdateDrama0_HTTP_Handler(srv))
+	r.DELETE("/drama/{id}", _Drama_DeleteDrama0_HTTP_Handler(srv))
+	r.GET("/drama/{id}", _Drama_GetDrama0_HTTP_Handler(srv))
 	r.GET("/drama", _Drama_ListDrama0_HTTP_Handler(srv))
 }
 
@@ -38,9 +38,6 @@ func _Drama_CreateDrama0_HTTP_Handler(srv DramaHTTPServer) func(ctx http.Context
 	return func(ctx http.Context) error {
 		var in CreateDramaRequest
 		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, "/api.drama.v1.Drama/CreateDrama")
@@ -159,11 +156,11 @@ func NewDramaHTTPClient(client *http.Client) DramaHTTPClient {
 
 func (c *DramaHTTPClientImpl) CreateDrama(ctx context.Context, in *CreateDramaRequest, opts ...http.CallOption) (*CreateDramaReply, error) {
 	var out CreateDramaReply
-	pattern := "/drama/{name}"
+	pattern := "/drama"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation("/api.drama.v1.Drama/CreateDrama"))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +169,7 @@ func (c *DramaHTTPClientImpl) CreateDrama(ctx context.Context, in *CreateDramaRe
 
 func (c *DramaHTTPClientImpl) DeleteDrama(ctx context.Context, in *DeleteDramaRequest, opts ...http.CallOption) (*DeleteDramaReply, error) {
 	var out DeleteDramaReply
-	pattern := "/drama/{name}"
+	pattern := "/drama/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation("/api.drama.v1.Drama/DeleteDrama"))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -185,7 +182,7 @@ func (c *DramaHTTPClientImpl) DeleteDrama(ctx context.Context, in *DeleteDramaRe
 
 func (c *DramaHTTPClientImpl) GetDrama(ctx context.Context, in *GetDramaRequest, opts ...http.CallOption) (*GetDramaReply, error) {
 	var out GetDramaReply
-	pattern := "/drama/{name}"
+	pattern := "/drama/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation("/api.drama.v1.Drama/GetDrama"))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -211,11 +208,11 @@ func (c *DramaHTTPClientImpl) ListDrama(ctx context.Context, in *ListDramaReques
 
 func (c *DramaHTTPClientImpl) UpdateDrama(ctx context.Context, in *UpdateDramaRequest, opts ...http.CallOption) (*UpdateDramaReply, error) {
 	var out UpdateDramaReply
-	pattern := "/drama/{name}"
+	pattern := "/drama/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation("/api.drama.v1.Drama/UpdateDrama"))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

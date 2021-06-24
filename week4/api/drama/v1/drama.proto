@@ -11,22 +11,24 @@ option java_package = "api.drama.v1";
 service Drama {
     rpc CreateDrama (CreateDramaRequest) returns (CreateDramaReply){
         option (google.api.http) = {
-            post: "/drama/{name}"
+            post: "/drama"
+            body: "*"
         };
     };
     rpc UpdateDrama (UpdateDramaRequest) returns (UpdateDramaReply){
         option (google.api.http) = {
-            put: "/drama/{name}"
+            put: "/drama/{id}"
+            body: "*"
         };
     };
     rpc DeleteDrama (DeleteDramaRequest) returns (DeleteDramaReply){
         option (google.api.http) = {
-            delete: "/drama/{name}"
+            delete: "/drama/{id}"
         };
     };
     rpc GetDrama (GetDramaRequest) returns (GetDramaReply){
         option (google.api.http) = {
-            get: "/drama/{name}"
+            get: "/drama/{id}"
         };
     };
     rpc ListDrama (ListDramaRequest) returns (ListDramaReply){
@@ -63,5 +65,5 @@ message GetDramaReply {}
 
 message ListDramaRequest {}
 message ListDramaReply {
-    repeated DramaMessage results = 1;
+    repeated DramaMessage  results = 1;
 }
